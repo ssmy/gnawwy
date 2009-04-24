@@ -11,4 +11,5 @@ class TwitterParser(object):
         now = time.time()
         tweets = self.api.GetFriendsTimeline()
         new_tweets = [tweet for tweet in tweets if time.localtime(tweet.GetCreatedAtInSeconds()) > time.gmtime(self.last_check)]
+        self.last_check = now
         return len(new_tweets)
