@@ -1,4 +1,4 @@
-import twitter, time, calendar
+import twitter, time, calendar, tempfile, urllib
 
 
 class TwitterParser(object):
@@ -6,10 +6,23 @@ class TwitterParser(object):
         self.username = username
         self.password = password
         self.api = twitter.Api(username=username, password=password)
-        self.last_check = time.time()
-    def check(self):
-        now = time.time()
+        self.api.SetCacheTimeout(None)
+        self.last_check = -1
         tweets = self.api.GetFriendsTimeline()
-        new_tweets = [tweet for tweet in tweets if time.localtime(tweet.GetCreatedAtInSeconds()) > time.gmtime(self.last_check)]
-        self.last_check = now
-        return len(new_tweets)
+        self.last_check = tweets[0].id
+    def check(self):
+        tweets = self.api.GetFriendsTimeline()
+        new_tweets = []
+        for tweet in tweets:
+            if tweet.id <= self.last_check: continue
+            new_tweet = {"title" : tweet.user.name, "text" : tweet.text}
+            temp = tempfile.NamedTemporaryFile()
+            temp.write(urllib.urlopen(tweet.user.profile_image_url).read())
+            new_tweet["icon"] = temp
+            temp.flush()
+            print temp.name
+            new_tweets.append(new_tweet)
+        if len(new_tweets):
+            self.last_check = tweets[0].id
+        print new_tweets
+        return new_tweets
