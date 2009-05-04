@@ -3,10 +3,10 @@ import pynotify, time
 
 
 pynotify.init("gnawwy")
-twitparse = TwitterParser('prognosys', '[8ln1Dm[|Sl8sogepIb]')
+twitparse = TwitterParser('username', 'password')
 
 while True:
-        time.sleep(1)
+        time.sleep(60)
         new_items = twitparse.check()
         if new_items:
             for item in new_items:
