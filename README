@@ -1,6 +1,6 @@
 The standard warnings apply here; gnawwy is in EXTREME-ALPHA. Run at your own risk.
 
-.gnawwyrc must exist in your home directory. A valid .gnawwyrc consists of multiple sections, each of which has a type, a username, and a password. Currently, the only valid type is twitter. Sections are divided by putting the name in brackets; the section name right now doesn't make a difference as to what gnawwy displays. A sample config file, for two Twitter accounts:
+.gnawwyrc must exist in your home directory. A valid .gnawwyrc consists of multiple sections, each of which has a type, a username, and a password. Currently, the only valid types are twitter and email (IMAP only!). Sections are divided by putting the name in brackets; the section name right now doesn't make a difference as to what gnawwy displays. A sample config file, for two Twitter accounts:
 [Main twitter account]
 type=twitter
 username=foo
@@ -10,3 +10,12 @@ password=bar
 username=baz
 password=xyzzy
 type=twitter
+
+[E-mail account]
+type=email
+server=imap.gmail.com
+username=plugh
+password=plover
+ssl=true
+
+Note that e-mail accounts must specify if they use SSL; the default is not.
