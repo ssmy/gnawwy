@@ -1,3 +1,12 @@
-The standard warnings apply here; gnawwy is in SUPER-EXTREME-ALPHA. It doesn't even work yet. Run at your own risk.
+The standard warnings apply here; gnawwy is in EXTREME-ALPHA. Run at your own risk.
 
-Change gnawwy.py to use your real username and password, obviously
+.gnawwyrc must exist in your home directory. A valid .gnawwyrc consists of multiple sections, each of which has a type, a username, and a password. Currently, the only valid type is twitter. Sections are divided by putting the name in brackets; the section name right now doesn't make a difference as to what gnawwy displays. A sample config file, for two Twitter accounts:
+[Main twitter account]
+type=twitter
+username=foo
+password=bar
+
+[Other account]
+username=baz
+password=xyzzy
+type=twitter

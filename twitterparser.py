@@ -20,9 +20,7 @@ class TwitterParser(object):
             temp.write(urllib.urlopen(tweet.user.profile_image_url).read())
             new_tweet["icon"] = temp
             temp.flush()
-            print temp.name
             new_tweets.append(new_tweet)
         if len(new_tweets):
             self.last_check = tweets[0].id
-        print new_tweets
         return new_tweets
