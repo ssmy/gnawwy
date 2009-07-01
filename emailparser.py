@@ -27,7 +27,7 @@ self.port)
         nmessages = len(indices)
         i = nmessages - 1
         notifications = []
-        while i > 0:
+        while i >= 0:
             # Fetch the received date and remove the preceding 'Date: '
             rfc2822 = self.imap.fetch(indices[i], '(BODY[HEADER.FIELDS (DATE)])')[1][0][1][6:]
             time_received = time.mktime(email.utils.parsedate(rfc2822))
