@@ -19,6 +19,7 @@ class TwitterParser(object):
             temp = tempfile.NamedTemporaryFile()
             temp.write(urllib.urlopen(tweet.user.profile_image_url).read())
             new_tweet["icon"] = temp
+            new_tweet["user"] = tweet.user.screen_name
             temp.flush()
             new_tweets.append(new_tweet)
         if len(new_tweets):

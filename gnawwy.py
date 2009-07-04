@@ -11,6 +11,7 @@ except IOError:
     print "Error: configuration file not found. Going to configuration file editor."
     shutil.copyfile(os.path.join(sys.path[0], 'defaultrc'), os.path.join(config_dir, 'gnawwy'))
     retcode = subprocess.call(['nano', os.path.join(config_dir,'gnawwy')])
+    print "Configuration file modified. Continuing..."
 
 parsers = {}
 for section in configparse.sections():
@@ -38,5 +39,9 @@ while True:
             new_items += parsers[section].check()
         if new_items:
             for item in new_items:
-                pynotify.Notification(item["title"], item["text"], "file://" + item["icon"].name).show()
+                print item["user"]
+                if item["user"] == username:
+                    print "Not displaying tweet from self"
+                else:
+                    pynotify.Notification(item["title"], item["text"], "file://" + item["icon"].name).show()
         time.sleep(60)
