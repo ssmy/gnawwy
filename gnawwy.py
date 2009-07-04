@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import pynotify, time, twitterparser, ConfigParser, os, sys, emailparser
+import pynotify, time, twitterparser, ConfigParser, os, sys, emailparser, subprocess, shutil
 from xdg.BaseDirectory import *
 
 pynotify.init("gnawwy")
@@ -9,7 +9,8 @@ try:
     configparse.readfp(open(os.path.join(config_dir, "gnawwy")))
 except IOError:
     print "Error: configuration file not found. Going to configuration file editor."
-    sys.exit()
+    shutil.copyfile(os.path.join(sys.path[0], 'defaultrc'), os.path.join(config_dir, 'gnawwy'))
+    retcode = subprocess.call(['nano', os.path.join(config_dir,'gnawwy')])
 
 parsers = {}
 for section in configparse.sections():
