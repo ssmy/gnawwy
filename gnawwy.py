@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 import pynotify, time, twitterparser, ConfigParser, os, sys, emailparser
+from xdg.BaseDirectory import *
 
 pynotify.init("gnawwy")
+config_dir = xdg_config_home
 configparse = ConfigParser.SafeConfigParser({'ssl' : 'False'})
 try:
-    configparse.readfp(open(os.path.expanduser('~/.gnawwyrc')))
+    configparse.readfp(open(os.path.join(config_dir, "gnawwy")))
 except IOError:
-    print "Error: configuration file not found. Create a .gnawwyrc in your home directory; see the README for the format."
+    print "Error: configuration file not found. Going to configuration file editor."
     sys.exit()
 
 parsers = {}
