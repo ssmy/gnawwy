@@ -1,5 +1,5 @@
+#!/usr/bin/env python
 import pynotify, time, twitterparser, ConfigParser, os, sys, emailparser
-
 
 pynotify.init("gnawwy")
 configparse = ConfigParser.SafeConfigParser({'ssl' : 'False'})

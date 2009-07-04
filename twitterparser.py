@@ -1,5 +1,5 @@
+#!/usr/bin/env python
 import twitter, time, calendar, tempfile, urllib
-
 
 class TwitterParser(object):
     def __init__(self, username, password):
