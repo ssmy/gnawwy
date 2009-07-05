@@ -36,7 +36,10 @@ while True:
         new_items = []
         for section in parsers:
             print "Checking section %s." % section
-            new_items += parsers[section].check()
+            try:
+                new_items += parsers[section].check()
+            except urllib2.UrlError:
+                print "Error fetching timeline."
         if new_items:
             for item in new_items:
                 print item["user"]
