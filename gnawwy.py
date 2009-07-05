@@ -14,7 +14,9 @@ except IOError:
     print "Configuration file modified. Continuing..."
 
 parsers = {}
+usernames = []
 for section in configparse.sections():
+    usernames.append(configparse.get(section, "username"))
     try:
         parsertype = configparse.get(section, "type")
         username = configparse.get(section, "username")
@@ -31,7 +33,6 @@ for section in configparse.sections():
         parsers[section] = parser
     except (ConfigParser.NoOptionError, ValueError) as error:
         print "Parsing section %s failed: %s." % (section, error)
-
 while True:
         new_items = []
         for section in parsers:
@@ -43,8 +44,8 @@ while True:
         if new_items:
             for item in new_items:
                 print item["user"]
-                if item["user"] == username:
+                if item["user"] in usernames:
                     print "Not displaying tweet from self"
                 else:
                     pynotify.Notification(item["title"], item["text"], "file://" + item["icon"].name).show()
-        time.sleep(60)
+        time.sleep(30)
