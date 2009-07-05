@@ -22,6 +22,6 @@ class TwitterParser(object):
             new_tweet["user"] = tweet.user.screen_name
             temp.flush()
             new_tweets.append(new_tweet)
-        if len(new_tweets):
+        if new_tweets:
             self.last_check = tweets[0].id
         return new_tweets
