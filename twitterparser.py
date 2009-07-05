@@ -7,7 +7,6 @@ class TwitterParser(object):
         self.password = password
         self.api = twitter.Api(username=username, password=password)
         self.api.SetCacheTimeout(None)
-        self.last_check = -1
         tweets = self.api.GetFriendsTimeline()
         self.last_check = tweets[0].id
     def check(self):
