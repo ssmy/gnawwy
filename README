@@ -1,6 +1,6 @@
 The standard warnings apply here; gnawwy is in EXTREME-ALPHA. Run at your own risk.
 
-.gnawwyrc must exist in your home directory. A valid .gnawwyrc consists of multiple sections, each of which has a type, a username, and a password. Currently, the only valid types are twitter and email (IMAP only!). Sections are divided by putting the name in brackets; the section name right now doesn't make a difference as to what gnawwy displays. A sample config file, for two Twitter accounts:
+.gnawwyrc must exist in your home directory. A valid .gnawwyrc consists of multiple sections, each of which has a type, a username, and a password. Currently, the only valid types are twitter and email (IMAP only!). Sections are divided by putting the name in brackets; the section name right now doesn't make a difference as to what gnawwy displays. The section _Global is special; it currently only accepts the option check_interval, which is how often gnawwy checks for updates (in seconds) and defaults to 60 seconds. A sample config file, for two Twitter accounts:
 [Main twitter account]
 type=twitter
 username=foo
@@ -18,4 +18,4 @@ username=plugh
 password=plover
 ssl=true
 
-Note that e-mail accounts must specify if they use SSL; the default is not.
+Note that e-mail accounts don't have to specify if they use SSL; the default is not.
