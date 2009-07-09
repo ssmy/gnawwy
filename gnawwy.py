@@ -56,7 +56,7 @@ class GnawwyGTK(object):
     def loadConfigFile(self, filepath):
         # These will eventually be removed; for backwards compat purposes only. All config files should have these set!
         defaults = {"check_interval" : "60", "ssl" : "false"}
-        self.check_interval = 10 # In case the _Global section isn't present
+        self.check_interval = 30 # In case the _Global section isn't present
         configparse = ConfigParser.SafeConfigParser(defaults)
         try:
             configparse.readfp(open(filepath))
