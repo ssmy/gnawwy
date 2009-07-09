@@ -1,5 +1,5 @@
 # Fill in with the appropriate values
 [Twitter]
-    type=twitter
-    username=USERNAME
-    password=PASSWORD
+type=twitter
+username=USERNAME
+password=PASSWORD
