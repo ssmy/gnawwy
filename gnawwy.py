@@ -1,16 +1,18 @@
+#!/usr/bin/env python
 import pynotify
-import time, ConfigParser, os, sys
+import time, ConfigParser, os, sys, shutil, subprocess, urllib2
 import twitterparser, emailparser
 import pygtk
 pygtk.require("2.0")
 import gtk, gobject
+import xdg.BaseDirectory
 
 
 class GnawwyGTK(object):
     def __init__(self):
         # Load configuration
         pynotify.init("gnawwy")
-        self.loadConfigFile(os.path.expanduser('~/.gnawwyrc'))
+        self.loadConfigFile(os.path.join(xdg.BaseDirectory.xdg_config_home, "gnawwy/gnawwy"))
         
         # Construct the tray icon
         self.tray_icon = gtk.StatusIcon()
@@ -38,25 +40,35 @@ class GnawwyGTK(object):
         new_items = []
         for section in self.parsers:
             print "Checking section %s." % section
-            new_items += parsers[section].check()
+            try:
+                new_items += self.parsers[section].check()
+            except urllib2.URLError:
+                print "Error fetching new items."
         if new_items:
             for item in new_items:
-                pynotify.Notification(item["title"], item["text"], "file://" + item["icon"].name).show()
+                if "user" in item and item["user"] in self.usernames:
+                    print "Not displaying tweet from self"
+                else:
+                    pynotify.Notification(item["title"], item["text"], "file://" + item["icon"].name).show()
         return True
     
     # Load settings from the specified config file.
     def loadConfigFile(self, filepath):
         # These will eventually be removed; for backwards compat purposes only. All config files should have these set!
         defaults = {"check_interval" : "60", "ssl" : "false"}
-        self.check_interval = 60 # In case the _Global section isn't present
+        self.check_interval = 10 # In case the _Global section isn't present
         configparse = ConfigParser.SafeConfigParser(defaults)
         try:
             configparse.readfp(open(filepath))
         except IOError:
-            print "Error: configuration file not found. Create a .gnawwyrc in your home directory; see the README for the format."
-            sys.exit()
+            print "Error: configuration file not found. Going to configuration file editor."
+            os.makedirs(os.path.dirname(filepath))
+            shutil.copyfile(os.path.join(sys.path[0], 'defaultrc'), filepath)
+            retcode = subprocess.call(['nano', filepath])
+            print "Configuration file modified. Continuing..."
             
         self.parsers = {}
+        self.usernames = []
 
         for section in configparse.sections():
             if section == "_Global": # Special section for global settings
@@ -68,6 +80,7 @@ class GnawwyGTK(object):
                 password = configparse.get(section, "password")
                 if parsertype == "twitter":
                     parser = twitterparser.TwitterParser(username, password)
+                    self.usernames.append(username)
                 elif parsertype == "email": # Email-unique settings
                     server = configparse.get(section, "server")
                     ssl = configparse.getboolean(section, "ssl")
@@ -75,7 +88,7 @@ class GnawwyGTK(object):
                 else:
                     print "Unknown parser type %s found; skipping section %s." % (parsertype, section)
                     continue
-                parsers[section] = parser
+                self.parsers[section] = parser
             except (ConfigParser.NoOptionError, ValueError) as error:
                 print "Parsing section %s failed: %s." % (section, error)
     

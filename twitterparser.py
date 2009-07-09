@@ -1,5 +1,5 @@
+#!/usr/bin/env python
 import twitter, time, calendar, tempfile, urllib
-
 
 class TwitterParser(object):
     def __init__(self, username, password):
@@ -18,8 +18,9 @@ class TwitterParser(object):
             temp = tempfile.NamedTemporaryFile()
             temp.write(urllib.urlopen(tweet.user.profile_image_url).read())
             new_tweet["icon"] = temp
+            new_tweet["user"] = tweet.user.screen_name
             temp.flush()
             new_tweets.append(new_tweet)
-        if len(new_tweets):
+        if new_tweets:
             self.last_check = tweets[0].id
         return new_tweets
