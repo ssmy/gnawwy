@@ -7,10 +7,13 @@ class TwitterParser(object):
         self.password = password
         self.api = twitter.Api(username=username, password=password)
         self.api.SetCacheTimeout(None)
-        try:
-            tweets = self.api.GetFriendsTimeline()
-        except urllib2.UrlError:
-            print "Twitter unreachable."
+        connected = False
+        while not connected:
+            try:
+                tweets = self.api.GetFriendsTimeline()
+                connected = True
+            except urllib2.UrlError:
+                print "Twitter unreachable."
         self.last_check = tweets[0].id
     def check(self):
         tweets = self.api.GetFriendsTimeline()
