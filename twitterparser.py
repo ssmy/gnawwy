@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import twitter, time, calendar, tempfile, urllib
+import twitter, time, calendar, tempfile, urllib2
 
 class TwitterParser(object):
     def __init__(self, username, password):
@@ -7,7 +7,10 @@ class TwitterParser(object):
         self.password = password
         self.api = twitter.Api(username=username, password=password)
         self.api.SetCacheTimeout(None)
-        tweets = self.api.GetFriendsTimeline()
+        try:
+            tweets = self.api.GetFriendsTimeline()
+        except urllib2.UrlError:
+            print "Twitter unreachable."
         self.last_check = tweets[0].id
     def check(self):
         tweets = self.api.GetFriendsTimeline()
