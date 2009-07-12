@@ -91,9 +91,6 @@ class GnawwyGTK(object):
                 self.parsers[section] = parser
             except (ConfigParser.NoOptionError, ValueError) as error:
                 print "Parsing section %s failed: %s." % (section, error)
-    def usage():
-        print "gnawwy.py [-t]"
-        print "-t no tray icon"
     def main(self):
         gtk.main()
 
