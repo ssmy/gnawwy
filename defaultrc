@@ -1,4 +1,8 @@
 # Fill in with the appropriate values
+[Settings]
+type=settings
+check_interval=30
+use_trayicon=true
 [Twitter]
 type=twitter
 username=USERNAME
