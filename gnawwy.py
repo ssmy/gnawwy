@@ -12,7 +12,7 @@ class GnawwyGTK(object):
     def __init__(self):
         # Load configuration
         pynotify.init("gnawwy")
-        self.loadConfigFile(os.path.join(xdg.BaseDirectory.xdg_config_home, "gnawwy/gnawwy"))
+        self.loadConfigFile(os.path.join(xdg.BaseDirectory.xdg_config_home, "gnawwy", "gnawwy"))
 
         # Construct the tray icon
         self.tray_icon = gtk.StatusIcon()
