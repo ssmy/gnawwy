@@ -17,7 +17,7 @@ class GnawwyGTK(object):
         # Construct the tray icon
         self.tray_icon = gtk.StatusIcon()
         self.tray_icon.set_from_stock(gtk.STOCK_ABOUT)
-        if not self.use_trayicon:
+        if self.use_trayicon:
             self.tray_icon.set_visible(True)
         else:
             print "Not showing trayicon"
