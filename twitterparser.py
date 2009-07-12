@@ -22,7 +22,7 @@ class TwitterParser(object):
             if tweet.id <= self.last_check: continue
             new_tweet = {"title" : tweet.user.name, "text" : tweet.text}
             temp = tempfile.NamedTemporaryFile()
-            temp.write(urllib.urlopen(tweet.user.profile_image_url).read())
+            temp.write(urllib2.urlopen(tweet.user.profile_image_url).read())
             new_tweet["icon"] = temp
             new_tweet["user"] = tweet.user.screen_name
             temp.flush()
