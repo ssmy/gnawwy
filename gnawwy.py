@@ -17,7 +17,10 @@ class GnawwyGTK(object):
         # Construct the tray icon
         self.tray_icon = gtk.StatusIcon()
         self.tray_icon.set_from_stock(gtk.STOCK_ABOUT)
-        self.tray_icon.set_visible(True)
+        if not self.use_trayicon:
+            self.tray_icon.set_visible(True)
+        else:
+            print "Not showing trayicon"
 
         # Construct tray icon menu and attach it to the tray icon
         menu = gtk.Menu()
@@ -84,7 +87,7 @@ class GnawwyGTK(object):
                     parser = emailparser.EmailParser(server, username, password, use_ssl=ssl)
                 elif parsertype == "settings": #global settings section
                     self.check_interval = configparse.getint(section, "check_interval")
-                    self.trayicon = configparse.getboolean(section, "use_trayicon")
+                    self.use_trayicon = configparse.getboolean(section, "use_trayicon")
                 else:
                     print "Unknown parser type %s found; skipping section %s." % (parsertype, section)
                     continue
