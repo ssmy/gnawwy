@@ -15,20 +15,19 @@ class GnawwyGTK(object):
         self.loadConfigFile(os.path.join(xdg.BaseDirectory.xdg_config_home, "gnawwy", "gnawwy"))
 
         # Construct the tray icon
-        self.tray_icon = gtk.StatusIcon()
-        self.tray_icon.set_from_stock(gtk.STOCK_ABOUT)
         if self.use_trayicon:
+            self.tray_icon = gtk.StatusIcon()
+            self.tray_icon.set_from_stock(gtk.STOCK_ABOUT)
             self.tray_icon.set_visible(True)
+
+            # Construct tray icon menu and attach it to the tray icon
+            menu = gtk.Menu()
+            item = gtk.ImageMenuItem(gtk.STOCK_QUIT)
+            item.connect('activate', lambda w: gtk.main_quit())
+            menu.append(item)
+            self.tray_icon.connect('popup-menu', self.popup_menu_cb, menu)
         else:
-            print "Not showing trayicon"
-
-        # Construct tray icon menu and attach it to the tray icon
-        menu = gtk.Menu()
-        item = gtk.ImageMenuItem(gtk.STOCK_QUIT)
-        item.connect('activate', lambda w: gtk.main_quit())
-        menu.append(item)
-        self.tray_icon.connect('popup-menu', self.popup_menu_cb, menu)
-
+            print "Not creating tray icon."
         # Finally, set up a notify timeout after running it once
         self.notify()
         gobject.timeout_add(self.check_interval * 1000, self.notify)
