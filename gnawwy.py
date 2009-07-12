@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import pynotify
-import time, ConfigParser, os, sys, shutil, subprocess, urllib2
+import time, ConfigParser, os, sys, shutil, subprocess, urllib2, getopt
 import twitterparser, emailparser
 import pygtk
 pygtk.require("2.0")
@@ -13,29 +13,29 @@ class GnawwyGTK(object):
         # Load configuration
         pynotify.init("gnawwy")
         self.loadConfigFile(os.path.join(xdg.BaseDirectory.xdg_config_home, "gnawwy/gnawwy"))
-        
+
         # Construct the tray icon
         self.tray_icon = gtk.StatusIcon()
         self.tray_icon.set_from_stock(gtk.STOCK_ABOUT)
         self.tray_icon.set_visible(True)
-        
+
         # Construct tray icon menu and attach it to the tray icon
         menu = gtk.Menu()
         item = gtk.ImageMenuItem(gtk.STOCK_QUIT)
         item.connect('activate', lambda w: gtk.main_quit())
         menu.append(item)
         self.tray_icon.connect('popup-menu', self.popup_menu_cb, menu)
-        
+
         # Finally, set up a notify timeout after running it once
         self.notify()
         gobject.timeout_add(self.check_interval * 1000, self.notify)
-     
+
     # Tray icon menu callback
     def popup_menu_cb(self, widget, button, time, data=None):
         data.show_all()
         data.popup(None, None, gtk.status_icon_position_menu, button, time, self.tray_icon)
-    
-    # Check the parsers and emit notifications    
+
+    # Check the parsers and emit notifications
     def notify(self):
         new_items = []
         for section in self.parsers:
@@ -51,7 +51,7 @@ class GnawwyGTK(object):
                 else:
                     pynotify.Notification(item["title"], item["text"], "file://" + item["icon"].name).show()
         return True
-    
+
     # Load settings from the specified config file.
     def loadConfigFile(self, filepath):
         # These will eventually be removed; for backwards compat purposes only. All config files should have these set!
@@ -66,14 +66,11 @@ class GnawwyGTK(object):
             shutil.copyfile(os.path.join(sys.path[0], 'defaultrc'), filepath)
             retcode = subprocess.call(['nano', filepath])
             print "Configuration file modified. Continuing..."
-            
+
         self.parsers = {}
         self.usernames = []
 
         for section in configparse.sections():
-            if section == "_Global": # Special section for global settings
-                self.check_interval = configparse.getint(section, "check_interval")
-                continue
             try:
                 parsertype = configparse.get(section, "type")
                 username = configparse.get(section, "username")
@@ -85,13 +82,18 @@ class GnawwyGTK(object):
                     server = configparse.get(section, "server")
                     ssl = configparse.getboolean(section, "ssl")
                     parser = emailparser.EmailParser(server, username, password, use_ssl=ssl)
+                elif parsertype == "settings": #global settings section
+                    self.check_interval = configparse.getint(section, "check_interval")
+                    self.trayicon = configparse.getboolean(section, "use_trayicon")
                 else:
                     print "Unknown parser type %s found; skipping section %s." % (parsertype, section)
                     continue
                 self.parsers[section] = parser
             except (ConfigParser.NoOptionError, ValueError) as error:
                 print "Parsing section %s failed: %s." % (section, error)
-    
+    def usage():
+        print "gnawwy.py [-t]"
+        print "-t no tray icon"
     def main(self):
         gtk.main()
 
