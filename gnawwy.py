@@ -76,12 +76,14 @@ class GnawwyGTK(object):
         for section in configparse.sections():
             try:
                 parsertype = configparse.get(section, "type")
-                username = configparse.get(section, "username")
-                password = configparse.get(section, "password")
                 if parsertype == "twitter":
+                    username = configparse.get(section, "username")
+                    password = configparse.get(section, "password")
                     parser = twitterparser.TwitterParser(username, password)
                     self.usernames.append(username)
                 elif parsertype == "email": # Email-unique settings
+                    username = configparse.get(section, "username")
+                    password = configparse.get(section, "password")
                     server = configparse.get(section, "server")
                     ssl = configparse.getboolean(section, "ssl")
                     parser = emailparser.EmailParser(server, username, password, use_ssl=ssl)
@@ -91,7 +93,8 @@ class GnawwyGTK(object):
                 else:
                     print "Unknown parser type %s found; skipping section %s." % (parsertype, section)
                     continue
-                self.parsers[section] = parser
+                if parsertype != "settings":
+                    self.parsers[section] = parser
             except (ConfigParser.NoOptionError, ValueError) as error:
                 print "Parsing section %s failed: %s." % (section, error)
     def main(self):
